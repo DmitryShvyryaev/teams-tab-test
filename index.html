@@ -3,60 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <title>Stage Dispatcher</title>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: Arial;
       padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 20px;
+      background: #f4f4f4;
     }
 
     .stage {
       background: white;
       padding: 15px;
-      margin-bottom: 15px;
+      margin: 10px 0;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     button {
-      margin-right: 10px;
+      margin-right: 8px;
       padding: 8px 12px;
       cursor: pointer;
     }
+
+    .userBox {
+      background: #e8f5ff;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
   </style>
+
+  <!-- Teams SDK -->
+  <script src="https://res.cdn.office.net/teams-js/2.0.0/js/MicrosoftTeams.min.js"></script>
 </head>
 
 <body>
 
-<h1>Stage Dispatcher</h1>
+<h1>Stage Dispatcher (TEST)</h1>
+
+<div class="userBox" id="userBox">
+  User: loading...
+</div>
 
 <div class="stage">
   <h2>STG-1</h2>
-  <button onclick="alert('JOIN STG-1')">Join</button>
-  <button onclick="alert('LEAVE STG-1')">Leave</button>
+  <button onclick="joinStage('STG-1')">Join</button>
+  <button onclick="leaveStage('STG-1')">Leave</button>
 </div>
 
 <div class="stage">
   <h2>STG-2</h2>
-  <button onclick="alert('JOIN STG-2')">Join</button>
-  <button onclick="alert('LEAVE STG-2')">Leave</button>
+  <button onclick="joinStage('STG-2')">Join</button>
+  <button onclick="leaveStage('STG-2')">Leave</button>
 </div>
 
 <div class="stage">
   <h2>STG-3</h2>
-  <button onclick="alert('JOIN STG-3')">Join</button>
-  <button onclick="alert('LEAVE STG-3')">Leave</button>
+  <button onclick="joinStage('STG-3')">Join</button>
+  <button onclick="leaveStage('STG-3')">Leave</button>
 </div>
 
 <div class="stage">
   <h2>STG-4</h2>
-  <button onclick="alert('JOIN STG-4')">Join</button>
-  <button onclick="alert('LEAVE STG-4')">Leave</button>
+  <button onclick="joinStage('STG-4')">Join</button>
+  <button onclick="leaveStage('STG-4')">Leave</button>
 </div>
+
+<script>
+  let currentUser = null;
+
+  // init Teams
+  microsoftTeams.app.initialize().then(() => {
+
+    microsoftTeams.app.getContext().then((context) => {
+
+      currentUser = {
+        id: context.user.id,
+        name: context.user.displayName,
+        email: context.user.userPrincipalName
+      };
+
+      document.getElementById("userBox").innerText =
+        "User: " + currentUser.name + " (" + currentUser.email + ")";
+    });
+
+  });
+
+  function joinStage(stage) {
+    if (!currentUser) {
+      alert("User not loaded yet");
+      return;
+    }
+
+    alert(currentUser.name + " JOINED " + stage);
+
+    console.log("JOIN:", {
+      stage,
+      user: currentUser
+    });
+  }
+
+  function leaveStage(stage) {
+    if (!currentUser) {
+      alert("User not loaded yet");
+      return;
+    }
+
+    alert(currentUser.name + " LEFT " + stage);
+
+    console.log("LEAVE:", {
+      stage,
+      user: currentUser
+    });
+  }
+</script>
 
 </body>
 </html>
